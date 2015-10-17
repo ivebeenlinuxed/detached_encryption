@@ -1,0 +1,12 @@
+case $1 in
+prereqs)
+        echo
+        exit 0
+        ;;
+esac
+
+. /scripts/functions
+
+sleep 1
+
+

@@ -1,0 +1,34 @@
+--- cryptsetup-1.4.3/debian/initramfs/cryptroot-hook~	2012-08-18 13:29:59.000000000 -0500
++++ cryptsetup-1.4.3/debian/initramfs/cryptroot-hook	2013-09-10 20:30:32.248226000 -0500
+@@ -173,6 +173,7 @@
+ 	target="$1"
+ 	extraopts="$2"
+ 	KEYSCRIPT=""
++	LUKSHEADER=""
+ 	OPTIONS=""
+ 
+ 	if [ -z "$target" ]; then
+@@ -221,6 +222,10 @@
+ 	unset LUKS_FOUND
+ 	for opt in $rootopts; do
+ 		case $opt in
++			header=*)
++				OPTIONS="$OPTIONS,$opt"
++				LUKSHEADER=${opt#header=}
++				;;
+ 			cipher=*)
+ 				OPTIONS="$OPTIONS,$opt"
+ 				;;
+@@ -269,6 +274,12 @@
+ 		echo "         the correct hash option to your /etc/crypttab."  >&2
+ 	fi
+ 
++	# Warn that header only applies to a LUKS partition currently
++	if [ -n "$LUKSHEADER" ] && [ -z "$LUKS_FOUND" ]; then
++		echo "WARNING: Option luks missing in crypttab for target $target." >&2
++		echo "         Headers are only supported for luks devices." >&2
++	fi
++
+ 	# If keyscript is set, the "key" is just an argument to the script
+ 	if [ "$key" != "none" ] && [ -z "$KEYSCRIPT" ]; then
+ 		echo "cryptsetup: WARNING: target $target uses a key file, skipped" >&2

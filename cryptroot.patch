@@ -1,0 +1,37 @@
+--- cryptroot.old	2015-10-17 00:19:05.330884000 +0000
++++ cryptroot.new	2015-10-17 00:21:01.862884000 +0000
+@@ -65,6 +65,7 @@
+ 	crypthash=ripemd160
+ 	crypttarget=cryptroot
+ 	cryptsource=""
++	cryptheader=""
+ 	cryptlvm=""
+ 	cryptkeyscript=""
+ 	cryptkey="" # This is only used as an argument to an eventual keyscript
+@@ -98,6 +99,11 @@
+ 			fi
+ 			export CRYPTTAB_SOURCE="$cryptsource"
+ 			;;
++		header=*)
++			cryptheader=${x#header=}
++			export CRYPTTAB_HEADER="$cryptheader"
++			cryptheader="$cryptheader"
++			;;
+ 		lvm=*)
+ 			cryptlvm=${x#lvm=}
+ 			;;
+@@ -229,7 +235,12 @@
+ 	if [ "$cryptdiscard" = "yes" ]; then
+ 		cryptcreate="$cryptcreate --allow-discards"
+ 	fi
+-	if /sbin/cryptsetup isLuks $cryptsource >/dev/null 2>&1; then
++
++	if [ -n "$cryptheader" ]; then
++		cryptcreate="$cryptcreate --header $cryptheader"
++	fi
++
++	if /sbin/cryptsetup isLuks ${cryptheader:-$cryptsource} >/dev/null 2>&1; then
+ 		cryptcreate="$cryptcreate luksOpen $cryptsource $crypttarget"
+ 	else
+ 		cryptcreate="$cryptcreate -c $cryptcipher -s $cryptsize -h $crypthash create $crypttarget $cryptsource"
+
