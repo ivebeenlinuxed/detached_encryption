@@ -27,12 +27,17 @@ This script works by installing through a live CD. Boot Kali Linux 2.0 on a spar
 download this repo and run the "pd.sh" script. Everything else is automatic.
 
 The script
- - Patches the cryptroot initramfs-tools script/hook to enable detached headers
- - Adds a new file (cryptstarter) which locates the luks header and makes it available
- - The vivid debootstrap script (and keyring) so you can install Ubuntu Vivid from Kali
+
+- Patches the cryptroot initramfs-tools script/hook to enable detached headers
+- Adds a new file (cryptstarter) which locates the luks header and makes it available
+- The vivid debootstrap script (and keyring) so you can install Ubuntu Vivid from Kali
  
 Steps
+
 1. Download and boot to Kali
+
 2. Download this repo
+
 3. Edit values in pd.sh to point to your pen drive, hard disk and set your crypt password
+
 4. Run ./pd.sh
